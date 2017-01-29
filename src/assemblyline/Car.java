@@ -7,7 +7,8 @@ class Car {
 
     private Frame frame;
     private Engine engine;
-    private List<Tire> tires = new ArrayList<>();
+    private List<Tire> tires = new ArrayList<>(4);
+    private List<Seat> seats = new ArrayList<>(5);
 
     boolean hasFrame() {
         return frame != null;
@@ -33,14 +34,23 @@ class Car {
         tires.add(new Tire());
     }
 
-    private class Frame {
+    int numberOfSeats() {
+        return seats.size();
+    }
 
+    void addSeat() {
+        seats.add(new Seat());
+    }
+
+    private class Frame {
     }
 
     private class Engine {
-
     }
 
     private class Tire {
+    }
+
+    private class Seat {
     }
 }

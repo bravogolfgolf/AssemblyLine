@@ -44,7 +44,7 @@ public class CarTest {
     }
 
     @Test
-    public void carShouldHaveOneTiresAfterAddingTire() {
+    public void carShouldHaveOneTireAfterAddingTire() {
         addThisManyTires(1);
         assertEquals(1, car.numberOfTires());
     }
@@ -58,5 +58,27 @@ public class CarTest {
     public void carShouldHaveFourTiresAfterAddingFourTires() {
         addThisManyTires(4);
         assertEquals(4, car.numberOfTires());
+    }
+
+    @Test
+    public void carShouldHaveNoSeatsBeforeAddingSeats() {
+        assertEquals(0, car.numberOfSeats());
+    }
+
+    @Test
+    public void carShouldHaveOneSeatAfterAddingSeat() {
+        addThisManySeats(1);
+        assertEquals(1, car.numberOfSeats());
+    }
+
+    private void addThisManySeats(int number) {
+        for (; number > 0; number--)
+            car.addSeat();
+    }
+
+    @Test
+    public void carShouldHaveFiveSeatsAfterAddingFiveSeats() {
+        addThisManySeats(5);
+        assertEquals(5, car.numberOfSeats());
     }
 }
