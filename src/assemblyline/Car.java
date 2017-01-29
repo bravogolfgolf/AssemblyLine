@@ -2,7 +2,7 @@ package assemblyline;
 
 class Car {
 
-    int frameCount() {
-        return 0;
+    boolean hasFrame() {
+        return false;
     }
 }

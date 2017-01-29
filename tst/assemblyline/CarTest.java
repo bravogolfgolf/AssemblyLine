@@ -2,13 +2,13 @@ package assemblyline;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static junit.framework.TestCase.assertFalse;
 
 public class CarTest {
 
     @Test
     public void carShouldHaveNotHaveFrameBeforeAddingFrame(){
         Car car = new Car();
-        assertEquals(0,car.frameCount());
+        assertFalse(car.hasFrame());
     }
 }
