@@ -13,7 +13,7 @@ public class CarTest {
 
     @Before
     public void setUp() throws Exception {
-        car = new Car();
+        car = new Car(0);
     }
 
     @Test
@@ -83,12 +83,19 @@ public class CarTest {
     }
 
     @Test
-    public void competeCarHasRightNumberOfEachComponet() {
+    public void competeCarHasRightNumberOfEachComponent() {
         car.build();
-        assertTrue(carIsComplete());
+        assertTrue(car.isComplete());
     }
 
-    private boolean carIsComplete() {
-        return car.hasFrame() && car.hasEngine() && (car.numberOfTires() == 4) && (car.numberOfSeats() == 5);
+    @Test
+    public void carToStringBeforeBuild() {
+        assertEquals(car.toString(), "Car: 0 (Frame: false; Engine: false; Seats: 0; Tires: 0)");
+    }
+
+    @Test
+    public void carToStringAfterBuild() {
+        car.build();
+        assertEquals(car.toString(), "Car: 0 (Frame: true; Engine: true; Seats: 5; Tires: 4)");
     }
 }
