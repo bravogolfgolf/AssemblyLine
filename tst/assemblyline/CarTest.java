@@ -25,4 +25,15 @@ public class CarTest {
         car.addFrame();
         assertTrue(car.hasFrame());
     }
+
+    @Test
+    public void carShouldHaveNotHaveEngineBeforeAddingEngine(){
+        assertFalse(car.hasEngine());
+    }
+
+    @Test
+    public void carShouldHaveOneEngineAfterAddingEngine(){
+        car.addEngine();
+        assertTrue(car.hasEngine());
+    }
 }
