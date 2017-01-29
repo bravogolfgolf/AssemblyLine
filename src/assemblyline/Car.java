@@ -3,17 +3,24 @@ package assemblyline;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 class Car {
 
     private static final int FACTOR = 1000;
+    private static final int REQUIRED_NUMBER_OF_TIRES = 4;
+    private static final int REQUIRED_NUMBER_OF_SEATS = 5;
+    private static final int THREAD_POOL_LIMIT = 3;
+    private static final String NEW_LINE = System.lineSeparator();
 
-    private int id;
-    private Frame frame;
+    private final int id;
     private Engine engine;
-    private List<Tire> tires = new ArrayList<>(4);
-    private List<Seat> seats = new ArrayList<>(5);
+    private Frame frame;
+    private final List<Tire> tires = new ArrayList<>(REQUIRED_NUMBER_OF_TIRES);
+    private final List<Seat> seats = new ArrayList<>(REQUIRED_NUMBER_OF_SEATS);
 
     Car(int id) {
         this.id = id;
@@ -51,28 +58,59 @@ class Car {
         seats.add(seat);
     }
 
-    void build() throws Exception {
+    void build() {
 
-        ExecutorService es = Executors.newFixedThreadPool(3);
-        List<Future<Tire>> tireFutures = Collections.synchronizedList(new ArrayList<>(4));
-        List<Future<Seat>> seatFutures = Collections.synchronizedList(new ArrayList<>(5));
-        Future<Frame> frameFuture = es.submit(new Frame());
-        Future<Engine> engineFuture = es.submit(new Engine());
+        ExecutorService es = Executors.newFixedThreadPool(THREAD_POOL_LIMIT);
+        List<Future<Tire>> tireFutures = Collections.synchronizedList(new ArrayList<>(REQUIRED_NUMBER_OF_TIRES));
+        List<Future<Seat>> seatFutures = Collections.synchronizedList(new ArrayList<>(REQUIRED_NUMBER_OF_SEATS));
 
-        for (int i = 0; i < 4; i++)
-            tireFutures.add(es.submit(new Tire()));
+        Future<Engine> engineFuture = es.submit(() -> {
+            buildTime(7);
+            buildMessage("engine");
+            return new Engine();
+        });
 
-        for (int i = 0; i < 5; i++)
-            seatFutures.add(es.submit(new Seat()));
+        Future<Frame> frameFuture = es.submit(() -> {
+            buildTime(5);
+            buildMessage("frame");
+            return new Frame();
+        });
+
+        for (int i = 0; i < REQUIRED_NUMBER_OF_SEATS; i++)
+            seatFutures.add(es.submit(() -> {
+                buildTime(3);
+                buildMessage("seat");
+                return new Seat();
+            }));
+
+        for (int i = 0; i < REQUIRED_NUMBER_OF_TIRES; i++)
+            tireFutures.add(es.submit(() -> {
+                buildTime(2);
+                buildMessage("tire");
+                return new Tire();
+            }));
 
         es.shutdown();
 
-        addFrame(frameFuture.get());
-        addEngine(engineFuture.get());
-        for (Future<Tire> future : tireFutures)
-            addTire(future.get());
-        for (Future<Seat> future : seatFutures)
-            addSeat(future.get());
+        try {
+            addFrame(frameFuture.get());
+            addEngine(engineFuture.get());
+            for (Future<Tire> future : tireFutures)
+                addTire(future.get());
+            for (Future<Seat> future : seatFutures)
+                addSeat(future.get());
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void buildTime(int millis) throws InterruptedException {
+        Thread.sleep(millis * FACTOR);
+    }
+
+    private void buildMessage(String label) {
+        System.out.format("Building %s with %s%s", label, Thread.currentThread().getName(), NEW_LINE);
     }
 
     @Override
@@ -82,38 +120,21 @@ class Car {
     }
 
     boolean isComplete() {
-        return hasFrame() && hasEngine() && (numberOfTires() == 4) && (numberOfSeats() == 5);
+        return hasFrame() &&
+                hasEngine() &&
+                (numberOfTires() == REQUIRED_NUMBER_OF_TIRES) &&
+                (numberOfSeats() == REQUIRED_NUMBER_OF_SEATS);
     }
 
-    static class Frame implements Callable {
-        @Override
-        public Frame call() throws Exception {
-            Thread.sleep(7 * FACTOR);
-            return this;
-        }
+    static class Frame {
     }
 
-    static class Engine implements Callable {
-        @Override
-        public Engine call() throws Exception {
-            Thread.sleep(5 * FACTOR);
-            return this;
-        }
+    static class Engine {
     }
 
-    static class Tire implements Callable {
-        @Override
-        public Tire call() throws Exception {
-            Thread.sleep(2 * FACTOR);
-            return this;
-        }
+    static class Tire {
     }
 
-    static class Seat implements Callable {
-        @Override
-        public Seat call() throws Exception {
-            Thread.sleep(3 * FACTOR);
-            return this;
-        }
+    static class Seat {
     }
 }

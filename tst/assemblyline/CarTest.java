@@ -12,7 +12,7 @@ public class CarTest {
     private Car car;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         car = new Car(0);
     }
 
@@ -44,18 +44,18 @@ public class CarTest {
     }
 
     @Test
-    public void carShouldHaveOneTireAfterAddingTire() throws Exception {
+    public void carShouldHaveOneTireAfterAddingTire() {
         addThisManyTires(1);
         assertEquals(1, car.numberOfTires());
     }
 
-    private void addThisManyTires(int number) throws Exception {
+    private void addThisManyTires(int number) {
         for (; number > 0; number--)
             car.addTire(new Car.Tire());
     }
 
     @Test
-    public void carShouldHaveFourTiresAfterAddingFourTires() throws Exception {
+    public void carShouldHaveFourTiresAfterAddingFourTires() {
         addThisManyTires(4);
         assertEquals(4, car.numberOfTires());
     }
@@ -66,24 +66,24 @@ public class CarTest {
     }
 
     @Test
-    public void carShouldHaveOneSeatAfterAddingSeat() throws Exception {
+    public void carShouldHaveOneSeatAfterAddingSeat() {
         addThisManySeats(1);
         assertEquals(1, car.numberOfSeats());
     }
 
-    private void addThisManySeats(int number) throws Exception {
+    private void addThisManySeats(int number) {
         for (; number > 0; number--)
             car.addSeat(new Car.Seat());
     }
 
     @Test
-    public void carShouldHaveFiveSeatsAfterAddingFiveSeats() throws Exception {
+    public void carShouldHaveFiveSeatsAfterAddingFiveSeats() {
         addThisManySeats(5);
         assertEquals(5, car.numberOfSeats());
     }
 
     @Test
-    public void competeCarHasRightNumberOfEachComponent() throws Exception {
+    public void competeCarHasRightNumberOfEachComponent() {
         car.build();
         assertTrue(car.isComplete());
     }
@@ -94,7 +94,7 @@ public class CarTest {
     }
 
     @Test
-    public void carToStringAfterBuild() throws Exception {
+    public void carToStringAfterBuild() {
         car.build();
         assertEquals(car.toString(), "Car: 0 (Frame: true; Engine: true; Seats: 5; Tires: 4)");
     }
