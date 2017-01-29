@@ -1,9 +1,13 @@
 package assemblyline;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.*;
 
 class Car {
+
+    private static final int FACTOR = 1000;
 
     private int id;
     private Frame frame;
@@ -19,41 +23,56 @@ class Car {
         return frame != null;
     }
 
-    void addFrame() {
-        frame = new Frame();
+    void addFrame(Frame frame) {
+        this.frame = frame;
     }
 
     boolean hasEngine() {
         return engine != null;
     }
 
-    void addEngine() {
-        engine = new Engine();
+    void addEngine(Engine engine) {
+        this.engine = engine;
     }
 
     int numberOfTires() {
         return tires.size();
     }
 
-    void addTire() {
-        tires.add(new Tire());
+    void addTire(Tire tire) {
+        tires.add(tire);
     }
 
     int numberOfSeats() {
         return seats.size();
     }
 
-    void addSeat() {
-        seats.add(new Seat());
+    void addSeat(Seat seat) {
+        seats.add(seat);
     }
 
-    void build() {
-        addFrame();
-        addEngine();
+    void build() throws Exception {
+
+        ExecutorService es = Executors.newFixedThreadPool(3);
+        List<Future<Tire>> tireFutures = Collections.synchronizedList(new ArrayList<>(4));
+        List<Future<Seat>> seatFutures = Collections.synchronizedList(new ArrayList<>(5));
+        Future<Frame> frameFuture = es.submit(new Frame());
+        Future<Engine> engineFuture = es.submit(new Engine());
+
         for (int i = 0; i < 4; i++)
-            addTire();
+            tireFutures.add(es.submit(new Tire()));
+
         for (int i = 0; i < 5; i++)
-            addSeat();
+            seatFutures.add(es.submit(new Seat()));
+
+        es.shutdown();
+
+        addFrame(frameFuture.get());
+        addEngine(engineFuture.get());
+        for (Future<Tire> future : tireFutures)
+            addTire(future.get());
+        for (Future<Seat> future : seatFutures)
+            addSeat(future.get());
     }
 
     @Override
@@ -66,15 +85,35 @@ class Car {
         return hasFrame() && hasEngine() && (numberOfTires() == 4) && (numberOfSeats() == 5);
     }
 
-    private class Frame {
+    static class Frame implements Callable {
+        @Override
+        public Frame call() throws Exception {
+            Thread.sleep(7 * FACTOR);
+            return this;
+        }
     }
 
-    private class Engine {
+    static class Engine implements Callable {
+        @Override
+        public Engine call() throws Exception {
+            Thread.sleep(5 * FACTOR);
+            return this;
+        }
     }
 
-    private class Tire {
+    static class Tire implements Callable {
+        @Override
+        public Tire call() throws Exception {
+            Thread.sleep(2 * FACTOR);
+            return this;
+        }
     }
 
-    private class Seat {
+    static class Seat implements Callable {
+        @Override
+        public Seat call() throws Exception {
+            Thread.sleep(3 * FACTOR);
+            return this;
+        }
     }
 }

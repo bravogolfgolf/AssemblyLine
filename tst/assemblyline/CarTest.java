@@ -23,7 +23,7 @@ public class CarTest {
 
     @Test
     public void carShouldHaveOneFrameAfterAddingFrame() {
-        car.addFrame();
+        car.addFrame(new Car.Frame());
         assertTrue(car.hasFrame());
     }
 
@@ -34,7 +34,7 @@ public class CarTest {
 
     @Test
     public void carShouldHaveOneEngineAfterAddingEngine() {
-        car.addEngine();
+        car.addEngine(new Car.Engine());
         assertTrue(car.hasEngine());
     }
 
@@ -44,18 +44,18 @@ public class CarTest {
     }
 
     @Test
-    public void carShouldHaveOneTireAfterAddingTire() {
+    public void carShouldHaveOneTireAfterAddingTire() throws Exception {
         addThisManyTires(1);
         assertEquals(1, car.numberOfTires());
     }
 
-    private void addThisManyTires(int number) {
+    private void addThisManyTires(int number) throws Exception {
         for (; number > 0; number--)
-            car.addTire();
+            car.addTire(new Car.Tire());
     }
 
     @Test
-    public void carShouldHaveFourTiresAfterAddingFourTires() {
+    public void carShouldHaveFourTiresAfterAddingFourTires() throws Exception {
         addThisManyTires(4);
         assertEquals(4, car.numberOfTires());
     }
@@ -66,24 +66,24 @@ public class CarTest {
     }
 
     @Test
-    public void carShouldHaveOneSeatAfterAddingSeat() {
+    public void carShouldHaveOneSeatAfterAddingSeat() throws Exception {
         addThisManySeats(1);
         assertEquals(1, car.numberOfSeats());
     }
 
-    private void addThisManySeats(int number) {
+    private void addThisManySeats(int number) throws Exception {
         for (; number > 0; number--)
-            car.addSeat();
+            car.addSeat(new Car.Seat());
     }
 
     @Test
-    public void carShouldHaveFiveSeatsAfterAddingFiveSeats() {
+    public void carShouldHaveFiveSeatsAfterAddingFiveSeats() throws Exception {
         addThisManySeats(5);
         assertEquals(5, car.numberOfSeats());
     }
 
     @Test
-    public void competeCarHasRightNumberOfEachComponent() {
+    public void competeCarHasRightNumberOfEachComponent() throws Exception {
         car.build();
         assertTrue(car.isComplete());
     }
@@ -94,7 +94,7 @@ public class CarTest {
     }
 
     @Test
-    public void carToStringAfterBuild() {
+    public void carToStringAfterBuild() throws Exception {
         car.build();
         assertEquals(car.toString(), "Car: 0 (Frame: true; Engine: true; Seats: 5; Tires: 4)");
     }
