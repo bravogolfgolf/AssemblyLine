@@ -42,6 +42,15 @@ class Car {
         seats.add(new Seat());
     }
 
+    void build() {
+        addFrame();
+        addEngine();
+        for (int i = 0; i < 4; i++)
+            addTire();
+        for (int i = 0; i < 5; i++)
+            addSeat();
+    }
+
     private class Frame {
     }
 

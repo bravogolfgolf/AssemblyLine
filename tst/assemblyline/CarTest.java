@@ -81,4 +81,14 @@ public class CarTest {
         addThisManySeats(5);
         assertEquals(5, car.numberOfSeats());
     }
+
+    @Test
+    public void competeCarHasRightNumberOfEachComponet() {
+        car.build();
+        assertTrue(carIsComplete());
+    }
+
+    private boolean carIsComplete() {
+        return car.hasFrame() && car.hasEngine() && (car.numberOfTires() == 4) && (car.numberOfSeats() == 5);
+    }
 }
