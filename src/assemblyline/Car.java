@@ -1,9 +1,13 @@
 package assemblyline;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class Car {
 
     private Frame frame;
     private Engine engine;
+    private List<Tire> tires = new ArrayList<>();
 
     boolean hasFrame() {
         return frame != null;
@@ -21,11 +25,22 @@ class Car {
         engine = new Engine();
     }
 
-    private static class Frame {
+    int numberOfTires() {
+        return tires.size();
+    }
+
+    void addTire() {
+        tires.add(new Tire());
+    }
+
+    private class Frame {
 
     }
 
-    private static class Engine {
+    private class Engine {
 
+    }
+
+    private class Tire {
     }
 }
